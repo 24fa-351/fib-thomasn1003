@@ -21,7 +21,6 @@ int iterative_fibonacci(int nthNum) {
 
    }
 
-
    return currentnum;
 
 }
@@ -40,27 +39,56 @@ int recursive_fibonacci(int nthNum) {
 
    }
 
-
    return recursive_fibonacci(nthNum - 1) + recursive_fibonacci(nthNum - 2);
+
 }
 
 
 
-int main(int arg1, char *arg2[]) {
+int main(int argc, char *argv[]) {
+
+   if (argc != 4) {
+
+      printf("Usage: %s <integer> <method: r/i> <filename>\n", argv[0]);
+
+      return 1;
+
+   }
 
 
-   int num = atoi(arg2[1]);
+   int num = atoi(argv[1]) - 1;
 
-   char method = arg2[2][0];
+   char method = argv[2][0];
+
+   FILE *fptr = fopen(argv[3], "r");
+   
+
+   if (fptr == NULL) {
+
+      perror("Error opening file");
+
+      return 1;
+
+   }
 
 
-   FILE *fptr = fopen(arg2[3], "r");
    int file_num;
-   fscanf(fptr, "%d", &file_num);
+
+
+   if (fscanf(fptr, "%d", &file_num) != 1) {
+
+      printf("Error reading integer from file\n");
+
+      fclose(fptr);
+
+      return 1;
+
+   }
+
+
    fclose(fptr);
 
-  
-   int nthNumber = num + file_num - 1;
+   int nthNumber = num + file_num;
 
    int result;
 
@@ -73,11 +101,19 @@ int main(int arg1, char *arg2[]) {
 
       result = recursive_fibonacci(nthNumber);
 
-   } 
+   } else {
+
+      printf("Invalid method. Use 'r' for recursive or 'i' for iterative.\n");
+
+      return 1;
+
+   }
 
 
-   printf("%d", result);
+   printf("%d\n", result);
 
    return 0;
-   
+
 }
+
+
